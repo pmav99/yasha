@@ -2,11 +2,13 @@ import re
 import ast
 from setuptools import setup, find_packages
 
-_version_re = re.compile(r'__version__\s+=\s+(.*)')
+# _version_re = re.compile(r'__version__\s+=\s+(.*)')
+#
+# with open('yasha/yasha.py', 'rb') as f:
+#     __version__ = str(ast.literal_eval(_version_re.search(
+#         f.read().decode('utf-8')).group(1)))
 
-with open('yasha/yasha.py', 'rb') as f:
-    __version__ = str(ast.literal_eval(_version_re.search(
-        f.read().decode('utf-8')).group(1)))
+__version__ = "5.0.1"
 
 setup(
     name="yasha",

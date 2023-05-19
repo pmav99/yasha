@@ -1,0 +1,46 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - '**.py'
+      - '.github/workflows/*test*.yml'
+      - 'pyproject.toml'
+      - 'poetry.lock'
+      - 'requirements/requirements*.txt'
+  pull_request:
+    paths:
+      - '**.py'
+      - '.github/workflows/*test*.yml'
+      - 'pyproject.toml'
+      - 'poetry.lock'
+      - 'requirements/requirements*.txt'
+
+jobs:
+  test:
+    name: test Python ${{ matrix.python }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+        python: [ '3.8', '3.9', '3.10', '3.11' ]
+    steps:
+      - uses: actions/checkout@main
+      - uses: actions/setup-python@main
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/cache@main
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: test-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml', 'requirements/*', 'setup*') }}
+      - run: python --version
+      - run: python -m pip --version
+      - run: pip install pytest
+      - run: pip install ./
+      - run: pytest --version
+      - run: python -m pip cache info
+      - run: pytest -v tests
